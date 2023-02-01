@@ -70,3 +70,17 @@ class ProductManager {
     return this.products;
   }
 }
+
+const productManager = new ProductManager();
+const product = {
+  title: "producto prueba",
+  description: "Este es un producto prueba",
+  price: 200,
+  thumbnail: "Sin imagen",
+  code: "abc123",
+  stock: 25
+};
+
+productManager.addProduct(product);
+
+console.log(productManager.getProducts());
