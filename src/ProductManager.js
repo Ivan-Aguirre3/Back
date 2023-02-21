@@ -1,12 +1,14 @@
 class Product {
-  constructor( id, title, description, price, thumbnail, code, stock) {
-    this.id = id;
+  static nextId = 1;
+
+  constructor(title, description, price, thumbnail, code, stock) {
+    this.id = Product.nextId++;
     this.title = title;
     this.description = description;
     this.price = price;
     this.thumbnail = thumbnail;
     this.code = code;
-    this.stock = stock;
+    this.stock = parseInt(stock);
   }
 }
 
@@ -17,7 +19,7 @@ class ProductManager {
   }
 
   addProduct(product) {
-    if (!product.id || !product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock) {
+    if (Object.keys(product).length !== 7) {
       console.error('All fields are required');
       return;
     }
@@ -47,20 +49,31 @@ class ProductManager {
     const productIndex = this.products.findIndex(product => product.id === id);
 
     if (productIndex === -1) {
-      console.error('Not found');
+      console.error('Product not found');
       return;
     }
 
     const existingProduct = this.products[productIndex];
+    const updatedProduct = { ...existingProduct, ...newData };
 
-    this.products[productIndex] = { ...existingProduct, ...newData, id: existingProduct.id };
+    if (Object.keys(updatedProduct).length !== 7) {
+      console.error('All fields are required');
+      return;
+    }
+
+    if (this.products.some(product => product.code === updatedProduct.code && product.id !== updatedProduct.id)) {
+      console.error('Code already exists');
+      return;
+    }
+
+    this.products[productIndex] = updatedProduct;
   }
 
   deleteProduct(id) {
     const productIndex = this.products.findIndex(product => product.id === id);
 
     if (productIndex === -1) {
-      console.error('Not found');
+      console.error('Product not found');
       return;
     }
 
